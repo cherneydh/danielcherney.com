@@ -4,6 +4,7 @@
     margin: 10px;
     padding: 10px;
     width: calc(100% - 20px); /* Full width on mobile */
+    max-width: 400px; /* Add a maximum width for larger screens */
     box-shadow: 0 4px 8px 0 var(--box-shadow-color);
     text-align: center;
     background-color: var(--background-color);
@@ -41,6 +42,7 @@
     display: flex;
     flex-wrap: wrap;
     justify-content: center; /* Center align for better layout on mobile */
+    gap: 20px; /* Add some spacing between boxes */
 }
 
 @media (min-width: 600px) {
