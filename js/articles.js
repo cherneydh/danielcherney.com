@@ -10,10 +10,12 @@ async function fetchArticles() {
         const text = await response.text();
         const parser = new DOMParser();
         const doc = parser.parseFromString(text, 'text/html');
-        const links = Array.from(doc.querySelectorAll('a'))
-            .filter(link => link.href.endsWith('.html'));
+        const links = Array.from(doc.querySelectorAll('a')).filter(link => link.href.endsWith('.html'));
+
+        console.log('Found HTML links:', links); // Debugging statement
 
         for (const link of links) {
+            console.log('Fetching article:', link.href); // Debugging statement
             const articleResponse = await fetch(link.href);
             const articleText = await articleResponse.text();
             const articleDoc = parser.parseFromString(articleText, 'text/html');
