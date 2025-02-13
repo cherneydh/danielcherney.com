@@ -41,7 +41,7 @@ jobs:
       - name: Get list of updated files
         id: file-list
         run: |
-          updated_files=$(aws s3 sync ./ s3://danielcherney.com --dryrun | grep "upload" | awk '{print $5}')
+          updated_files=$(aws s3 sync ./ s3://danielcherney.com --dryrun | grep "upload" | awk '{print $3}')
           
           # Prepare invalidation paths
           invalidation_paths=""
