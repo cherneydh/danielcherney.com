@@ -3,7 +3,7 @@ const fileData = [];
 
 async function fetchLatestArticle() {
     try {
-        const response = await fetch('https://danielcherney.com.s3.amazonaws.com/articles/');
+        const response = await fetch('https://danielcherney.com/articles/');
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
