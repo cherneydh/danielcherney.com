@@ -3,35 +3,35 @@ const fileData = [];
 
 async function fetchLatestArticle() {
     try {
-        const response = await fetch('https://danielcherney.com/articles/');
-        console.log('Fetching directory:', response); // Debugging statement
+        const response = await fetch('https://danielcherney.com.s3.amazonaws.com/?list-type=2&prefix=articles/');
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
         const text = await response.text();
         console.log('Directory listing:', text); // Debugging statement
         const parser = new DOMParser();
-        const doc = parser.parseFromString(text, 'text/html');
-        const links = Array.from(doc.querySelectorAll('a')).filter(link => link.href.endsWith('.html'));
+        const doc = parser.parseFromString(text, 'application/xml');
+        const keys = doc.getElementsByTagName('Key');
 
-        console.log('Found HTML links:', links); // Debugging statement
+        for (let i = 0; i < keys.length; i++) {
+            const key = keys[i].textContent;
+            if (key.endsWith('.html') && key.startsWith('articles/')) {
+                const url = `https://danielcherney.com.s3.amazonaws.com/${key}`;
+                console.log('Fetching article:', url); // Debugging statement
+                const articleResponse = await fetch(url);
+                const articleText = await articleResponse.text();
+                const articleDoc = parser.parseFromString(articleText, 'text/html');
+                const creationDate = articleDoc.querySelector('meta[name="creation-date"]');
+                const titleElement = articleDoc.querySelector('title');
 
-        for (const link of links) {
-            console.log('Fetching article:', link.href); // Debugging statement
-            const articleResponse = await fetch(link.href);
-            console.log('Article response:', articleResponse); // Debugging statement
-            const articleText = await articleResponse.text();
-            const articleDoc = parser.parseFromString(articleText, 'text/html');
-            const creationDate = articleDoc.querySelector('meta[name="creation-date"]');
-            const titleElement = articleDoc.querySelector('title');
-
-            if (creationDate && titleElement) {
-                fileData.push({
-                    creationDate: new Date(creationDate.content),
-                    title: titleElement.textContent,
-                    content: articleDoc.body.innerHTML,
-                    url: link.href
-                });
+                if (creationDate && titleElement) {
+                    fileData.push({
+                        creationDate: new Date(creationDate.content),
+                        title: titleElement.textContent,
+                        content: articleDoc.body.innerHTML,
+                        url: url
+                    });
+                }
             }
         }
         console.log('File data:', fileData); // Debugging statement
