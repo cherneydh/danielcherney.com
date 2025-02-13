@@ -1,7 +1,7 @@
-const latestArticleContent = document.getElementById('latest-article-content');
+const articlesList = document.getElementById('articles-list');
 const fileData = [];
 
-async function fetchLatestArticle() {
+async function fetchArticles() {
     try {
         const response = await fetch('https://danielcherney.com.s3.amazonaws.com/articles/');
         if (!response.ok) {
@@ -30,23 +30,31 @@ async function fetchLatestArticle() {
                 }
             }
         }
-        fileData.sort((a, b) => b.creationDate - a.creationDate);
-
-        if (fileData.length > 0) {
-            const latestArticle = fileData[0];
-            latestArticleContent.innerHTML = `
-                <h3>${latestArticle.title}</h3>
-                <p>${latestArticle.creationDate.toDateString()}</p>
-                <div>${latestArticle.content}</div>
-                <p><a href="${latestArticle.url}">Read more</a></p>
-            `;
-        } else {
-            latestArticleContent.textContent = 'No articles found.';
-        }
     } catch (error) {
-        console.error('Failed to fetch the latest article:', error);
-        latestArticleContent.textContent = 'Failed to load the latest article.';
+        console.error('Failed to fetch articles:', error);
     }
 }
 
-document.addEventListener('DOMContentLoaded', fetchLatestArticle);
+function populateArticles() {
+    fileData.sort((a, b) => b.creationDate - a.creationDate);
+
+    if (fileData.length > 0) {
+        fileData.forEach(article => {
+            const li = document.createElement('li');
+            const a = document.createElement('a');
+            a.href = article.url;
+            a.textContent = `${article.title} (${article.creationDate.toDateString()})`;
+            li.appendChild(a);
+            articlesList.appendChild(li);
+        });
+    } else {
+        articlesList.textContent = 'No articles found.';
+    }
+}
+
+async function initialize() {
+    await fetchArticles();
+    populateArticles();
+}
+
+document.addEventListener('DOMContentLoaded', initialize);
