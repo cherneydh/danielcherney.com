@@ -8,6 +8,7 @@
 body {
     background-color: #f4f4f9;
     color: #333;
+    line-height: 1.6;
     transition: background 0.3s ease, color 0.3s ease;
 }
 
@@ -17,7 +18,7 @@ header {
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
-nav ul {
+.main-nav ul {
     list-style: none;
     display: flex;
     justify-content: center;
@@ -25,26 +26,28 @@ nav ul {
     margin: 0;
 }
 
-nav ul li {
+.main-nav ul li {
     margin: 0 1.5rem;
 }
 
-nav ul li a {
+.main-nav ul li a {
     color: #fff;
     text-decoration: none;
     font-weight: bold;
     transition: color 0.3s ease;
 }
 
-nav ul li a:hover {
+.main-nav ul li a:hover {
     color: #ccc;
 }
 
-main {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 2rem;
-    text-align: center;
+.container {
+    max-width: 800px;
+    margin: 2rem auto;
+    padding: 1rem;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .hero {
@@ -53,6 +56,7 @@ main {
     padding: 3rem 1.5rem;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
 }
 
 .hero h1 {
@@ -62,17 +66,61 @@ main {
 
 .hero p {
     font-size: 1.2rem;
+    margin-bottom: 1.5rem;
 }
 
-a {
-    color: #007bff;
-    text-decoration: none;
-    transition: color 0.3s ease;
+.iframe-container {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
 }
 
-a:hover {
-    color: #0056b3;
-    text-decoration: underline;
+.iframe-container iframe {
+    width: 300px;
+    height: 150px;
+    border: none;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.article-content {
+    margin-bottom: 2rem;
+}
+
+.article-header {
+    border-bottom: 2px solid #ddd;
+    margin-bottom: 1rem;
+    padding-bottom: 1rem;
+}
+
+.article-header h1 {
+    font-size: 2.5rem;
+    color: #333;
+}
+
+.article-meta {
+    font-size: 0.9rem;
+    color: #777;
+}
+
+.article-body h2 {
+    font-size: 1.8rem;
+    margin-top: 1.5rem;
+    margin-bottom: 0.5rem;
+    color: #333;
+}
+
+.article-body p {
+    margin-bottom: 1.5rem;
+    text-align: justify;
+}
+
+.footer {
+    text-align: center;
+    padding: 1rem;
+    background-color: #333;
+    color: #fff;
+    border-top: 2px solid #ddd;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -80,10 +128,11 @@ a:hover {
         color: #c9d1d9;
         background: #0d1117;
     }
-    a {
-        color: #58a6ff;
+    .container {
+        background: #161b22;
+        box-shadow: 0 4px 8px rgba(255, 255, 255, 0.1);
     }
-    a:hover {
-        color: #1e90ff;
+    .footer {
+        background-color: #161b22;
     }
 }
