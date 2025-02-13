@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const titleText = document.querySelector('title').innerText;
 
     // Set the hero background image
-    heroSection.style.backgroundImage = `url(${metaImage})`;
+    heroSection.style.backgroundImage = `url(..${metaImage})`;
 
     // Set the hero title
     heroTitle.textContent = titleText;
