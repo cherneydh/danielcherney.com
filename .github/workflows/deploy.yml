@@ -41,22 +41,23 @@ jobs:
       - name: Get list of updated files
         id: file-list
         run: |
-          if git rev-parse --verify HEAD >/dev/null 2>&1; then
-            # Check if there are previous commits
-            if [ "$(git rev-list --count HEAD)" -eq 1 ]; then
-              updated_files=$(git ls-files)
-            else
-              updated_files=$(git diff --name-only HEAD^ HEAD)
-            fi
-          else
-            # Fallback if HEAD is not valid
+          # Ensure we're on the correct branch
+          git checkout main
+          
+          # Fetch the latest changes
+          git fetch origin
+          
+          # Get the list of changed files between the last commit and the current one
+          if [ "$(git rev-list --count HEAD)" -eq 1 ]; then
             updated_files=$(git ls-files)
+          else
+            updated_files=$(git diff --name-only HEAD~1 HEAD)
           fi
           
           # Prepare invalidation paths
           invalidation_paths=""
           for file in $updated_files; do
-            invalidation_paths="$invalidation_paths /${file}"
+            invalidation_paths="$invalidation_paths /$file"
           done
           
           echo "UPDATED_FILES=$invalidation_paths" >> $GITHUB_ENV
