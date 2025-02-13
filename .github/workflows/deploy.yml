@@ -63,17 +63,10 @@ jobs:
           done
           
           echo "UPDATED_FILES=$invalidation_paths" >> $GITHUB_ENV
-          echo "Debugging UPDATED_FILES: $invalidation_paths"
       
       - name: Invalidate CloudFront Cache
         if: env.UPDATED_FILES != ''
         run: |
-          # Debugging the value of UPDATED_FILES
-          echo "Debugging Invalidation paths: $UPDATED_FILES"
-          
-          # Check what the final invalidation paths look like
-          echo "Final invalidation paths: $UPDATED_FILES"
-          
           # Run CloudFront invalidation
           aws cloudfront create-invalidation --distribution-id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }} --paths $UPDATED_FILES
       
