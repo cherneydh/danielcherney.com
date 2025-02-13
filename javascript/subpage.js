@@ -2,7 +2,7 @@ const folder = window.location.pathname.split('/').pop().split('.')[0];
 const fileData = [];
 
 async function fetchFiles() {
-    const response = await fetch(`https://danielcherney.com.s3.amazonaws.com/${folder}/index.html`);
+    const response = await fetch(`https://danielcherney.com.s3.amazonaws.com/${folder}/music.html`);
     const text = await response.text();
     const parser = new DOMParser();
     const doc = parser.parseFromString(text, 'text/html');
