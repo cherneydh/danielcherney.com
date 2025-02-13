@@ -40,7 +40,12 @@ jobs:
 
       - name: Invalidate CloudFront Cache
         run: |
-          CHANGED_FILES=$(git diff --name-only HEAD^ HEAD)
+          if [ "$(git rev-parse HEAD^ 2>/dev/null)" ]; then
+            CHANGED_FILES=$(git diff --name-only HEAD^ HEAD)
+          else
+            CHANGED_FILES=$(git ls-files)
+          fi
           for FILE in $CHANGED_FILES; do
             aws cloudfront create-invalidation --distribution-id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }} --paths "/$FILE"
           done
+        
