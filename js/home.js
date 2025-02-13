@@ -3,6 +3,7 @@ const fileData = [];
 
 async function fetchLatestArticle() {
     try {
+        // List objects in the articles directory
         const response = await fetch('https://danielcherney.com.s3.amazonaws.com/?list-type=2&prefix=articles/');
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
@@ -15,7 +16,7 @@ async function fetchLatestArticle() {
 
         for (let i = 0; i < keys.length; i++) {
             const key = keys[i].textContent;
-            if (key.endsWith('.html')) {
+            if (key.endsWith('.html') && key.startsWith('articles/')) {
                 const url = `https://danielcherney.com.s3.amazonaws.com/${key}`;
                 console.log('Fetching article:', url); // Debugging statement
                 const articleResponse = await fetch(url);
