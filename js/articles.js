@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     async function fetchArticles() {
         try {
-            const response = await fetch('https://danielcherney.com/articles/articles.json'); // Ensure this URL is correct
+            const response = await fetch('https://danielcherney.com/articles.json'); // Ensure this URL is correct
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
