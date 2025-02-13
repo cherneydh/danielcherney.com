@@ -1,63 +1,35 @@
-const articlesList = document.getElementById('articles-list');
-const fileData = [];
+document.addEventListener('DOMContentLoaded', async () => {
+    const articlesList = document.getElementById('articles-list');
 
-async function fetchArticles() {
-    try {
-        // List objects in the articles directory
-        const response = await fetch('https://danielcherney.com/articles/');
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
+    async function fetchArticles() {
+        try {
+            const response = await fetch('https://danielcherney.com/articles/articles.json');
+            if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+
+            const articles = await response.json();
+            return articles.sort((a, b) => new Date(b.creationDate) - new Date(a.creationDate));
+        } catch (error) {
+            console.error('Failed to fetch articles:', error);
+            return [];
         }
-        const text = await response.text();
-        console.log('Directory listing:', text); // Debugging statement
-        const parser = new DOMParser();
-        const doc = parser.parseFromString(text, 'text/html');
-        const links = Array.from(doc.querySelectorAll('a')).filter(link => link.href.endsWith('.html'));
-
-        for (const link of links) {
-            const url = link.href.startsWith('/') ? `https://danielcherney.com${link.getAttribute('href')}` : link.href;
-            console.log('Fetching article:', url); // Debugging statement
-            const articleResponse = await fetch(url);
-            const articleText = await articleResponse.text();
-            const articleDoc = parser.parseFromString(articleText, 'text/html');
-            const creationDate = articleDoc.querySelector('meta[name="creation-date"]');
-            const titleElement = articleDoc.querySelector('title');
-
-            if (creationDate && titleElement) {
-                fileData.push({
-                    creationDate: new Date(creationDate.content),
-                    title: titleElement.textContent,
-                    content: articleDoc.body.innerHTML,
-                    url: url
-                });
-            }
-        }
-        console.log('File data:', fileData); // Debugging statement
-    } catch (error) {
-        console.error('Failed to fetch articles:', error);
     }
-}
 
-function populateArticles() {
-    fileData.sort((a, b) => b.creationDate - a.creationDate);
+    function populateArticles(articles) {
+        if (articles.length === 0) {
+            articlesList.textContent = 'No articles found.';
+            return;
+        }
 
-    if (fileData.length > 0) {
-        fileData.forEach(article => {
+        articles.forEach(article => {
             const li = document.createElement('li');
             const a = document.createElement('a');
             a.href = article.url;
-            a.textContent = `${article.title} (${article.creationDate.toDateString()})`;
+            a.textContent = `${article.title} (${new Date(article.creationDate).toDateString()})`;
             li.appendChild(a);
             articlesList.appendChild(li);
         });
-    } else {
-        articlesList.textContent = 'No articles found.';
     }
-}
 
-async function initialize() {
-    await fetchArticles();
-    populateArticles();
-}
-
-document.addEventListener('DOMContentLoaded', initialize);
+    const articles = await fetchArticles();
+    populateArticles(articles);
+});
