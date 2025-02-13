@@ -3,7 +3,7 @@ const fileData = [];
 
 async function fetchFiles() {
     for (const folder of folders) {
-        const response = await fetch(`https://danielcherney.s3.amazonaws.com/${folder}/index.html`);
+        const response = await fetch(`https://danielcherney.com.s3.amazonaws.com/${folder}/index.html`);
         const text = await response.text();
         const parser = new DOMParser();
         const doc = parser.parseFromString(text, 'text/html');
