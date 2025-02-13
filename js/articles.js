@@ -4,19 +4,22 @@ const fileData = [];
 async function fetchArticles() {
     try {
         const response = await fetch('https://danielcherney.com/articles/');
+        console.log('Fetching directory:', response); // Debugging statement
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
         const text = await response.text();
+        console.log('Directory listing:', text); // Debugging statement
         const parser = new DOMParser();
         const doc = parser.parseFromString(text, 'text/html');
-        const links = Array.from(doc.querySelectorAll('a')).filter(link => link.href.includes('/articles/') && link.href.endsWith('.html'));
+        const links = Array.from(doc.querySelectorAll('a')).filter(link => link.href.endsWith('.html'));
 
         console.log('Found HTML links:', links); // Debugging statement
 
         for (const link of links) {
             console.log('Fetching article:', link.href); // Debugging statement
             const articleResponse = await fetch(link.href);
+            console.log('Article response:', articleResponse); // Debugging statement
             const articleText = await articleResponse.text();
             const articleDoc = parser.parseFromString(articleText, 'text/html');
             const creationDate = articleDoc.querySelector('meta[name="creation-date"]');
@@ -31,6 +34,7 @@ async function fetchArticles() {
                 });
             }
         }
+        console.log('File data:', fileData); // Debugging statement
     } catch (error) {
         console.error('Failed to fetch articles:', error);
     }
