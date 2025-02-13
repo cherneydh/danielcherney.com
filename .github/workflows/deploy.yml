@@ -48,6 +48,6 @@ jobs:
         if: env.UPDATED_FILES != ''
         run: |
           invalidation_paths=$(echo "$UPDATED_FILES" | tr '\n' ' ' | sed 's| | / |g')
-          aws cloudfront create-invalidation --distribution-id YOUR_CLOUDFRONT_DISTRIBUTION_ID --paths $invalidation_paths
+          aws cloudfront create-invalidation --distribution-id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }} --paths $invalidation_paths
         
         
