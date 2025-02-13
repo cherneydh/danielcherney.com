@@ -48,6 +48,27 @@ header {
     box-shadow: 0 2px 5px var(--box-shadow-color);
 }
 
+h2 {
+    font-size: 2rem;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+    color: var(--text-color);
+    text-align: center;
+}
+
+h3 {
+    font-size: 1.5rem;
+    margin-top: 1.5rem;
+    margin-bottom: 1rem;
+    color: var(--text-color);
+    text-align: center;
+}
+
+/* Optional: Add some spacing for paragraphs following headers */
+h2 + p, h3 + p {
+    margin-top: 0.5rem;
+}
+
 .main-nav ul {
     list-style: none;
     display: flex;
