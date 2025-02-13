@@ -21,8 +21,8 @@ jobs:
 
       - name: Sync Files to S3
         run: |
-          aws s3 sync ./ s3://your-bucket-name --delete --exclude "*.js" --content-type "text/html"
-          aws s3 cp --recursive ./ s3://your-bucket-name --exclude "*" --include "*.js" --content-type "application/javascript"
+          aws s3 sync ./ s3://danielcherney.com --delete --exclude "*.js" --content-type "text/html"
+          aws s3 cp --recursive ./ s3://danielcherney.com --exclude "*" --include "*.js" --content-type "application/javascript"
 
 
       - name: Invalidate CloudFront Cache
