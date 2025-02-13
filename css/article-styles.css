@@ -16,7 +16,7 @@
 .article-box img {
     width: 100%;
     max-height: 200px; /* Set a maximum height for the image */
-    object-fit: cover; /* Ensure the image is properly contained within the dimensions */
+    object-fit: contain; /* Ensure the image is properly contained within the dimensions while maintaining aspect ratio */
     border-radius: 8px 8px 0 0;
 }
 
