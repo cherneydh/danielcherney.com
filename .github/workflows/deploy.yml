@@ -41,12 +41,13 @@ jobs:
       - name: Get list of updated files
         id: file-list
         run: |
-          updated_files=$(aws s3 sync ./ s3://danielcherney.com --dryrun | grep "upload" | awk '{print $3}')
+          # Get the list of changed files between the last commit and the current one
+          updated_files=$(git diff --name-only HEAD^)
           
           # Prepare invalidation paths
           invalidation_paths=""
           for file in $updated_files; do
-            invalidation_paths="$invalidation_paths /${file}"
+            invalidation_paths="$invalidation_paths /$file"
           done
           
           echo "UPDATED_FILES=$invalidation_paths" >> $GITHUB_ENV
