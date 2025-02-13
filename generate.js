@@ -11,15 +11,17 @@ function generateArticlesJson() {
             const filePath = path.join(articlesDir, file);
             const content = fs.readFileSync(filePath, 'utf8');
 
-            // Extract title and creation date
+            // Extract title, creation date, and image URL
             const titleMatch = content.match(/<title>(.*?)<\/title>/);
             const dateMatch = content.match(/<meta\s+name="creation-date"\s+content="(.*?)"/);
+            const imageMatch = content.match(/<meta\s+name="image"\s+content="(.*?)"/);
 
             if (titleMatch && dateMatch) {
                 articles.push({
                     title: titleMatch[1],
                     url: `/articles/${file}`,
-                    creationDate: dateMatch[1]
+                    creationDate: dateMatch[1],
+                    imageUrl: imageMatch ? imageMatch[1] : null // Default to null if not found
                 });
             }
         }
