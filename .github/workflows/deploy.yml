@@ -15,6 +15,9 @@ jobs:
       - name: Generate articles.json
         run: node generate.js
 
+      - name: Generate changes.json
+        run: node generate_changes.js
+
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v3
         with:
@@ -38,40 +41,19 @@ jobs:
         run: |
           aws s3 sync ./ s3://danielcherney.com --exclude "*" --include "articles.json" --content-type "application/json" --delete --cache-control "no-cache"
 
-      - name: Get list of updated files
-        id: file-list
+      - name: Invalidate CloudFront Cache
         run: |
-          # Ensure we're on the correct branch
-          git checkout main
-          
-          # Fetch the latest changes
-          git fetch origin
-          
-          # Get the list of changed files between the last commit and the current one
-          if [ "$(git rev-list --count HEAD)" -eq 1 ]; then
-            updated_files=$(git ls-files)
-          else
-            updated_files=$(git diff --name-only HEAD~1 HEAD)
-          fi
+          # Read changes.json
+          changed_files=$(cat changes.json | jq -r '.files[]')
           
           # Prepare invalidation paths
           invalidation_paths=""
-          for file in $updated_files; do
+          for file in $changed_files; do
             invalidation_paths="$invalidation_paths /$file"
           done
           
-          echo "UPDATED_FILES=$invalidation_paths" >> $GITHUB_ENV
-          echo "Debugging UPDATED_FILES: $invalidation_paths"
-      
-      - name: Invalidate CloudFront Cache
-        if: env.UPDATED_FILES != ''
-        run: |
           # Debugging the value of UPDATED_FILES
-          echo "Debugging Invalidation paths: $UPDATED_FILES"
-          
-          # Check what the final invalidation paths look like
-          echo "Final invalidation paths: $UPDATED_FILES"
+          echo "Debugging Invalidation paths: $invalidation_paths"
           
           # Run CloudFront invalidation
-          aws cloudfront create-invalidation --distribution-id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }} --paths $UPDATED_FILES
-      
+          aws cloudfront create-invalidation --distribution-id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }} --paths 
