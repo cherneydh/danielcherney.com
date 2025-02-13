@@ -19,12 +19,17 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
 
-      - name: Sync Files to S3
+      - name: Sync HTML Files to S3
         run: |
-          aws s3 sync ./ s3://danielcherney.com --delete --exclude "*.css" --exclude "*.js"
-          aws s3 cp --recursive ./css/ s3://danielcherney.com/css/ --content-type "text/css"
-          aws s3 cp --recursive ./js/ s3://danielcherney.com/js/ --content-type "application/javascript"
+          aws s3 sync ./ s3://danielcherney.com --exclude "*.css" --exclude "*.js" --delete
 
+      - name: Sync CSS Files to S3
+        run: |
+          aws s3 sync ./css/ s3://danielcherney.com/css/ --content-type "text/css" --delete
+
+      - name: Sync JS Files to S3
+        run: |
+          aws s3 sync ./js/ s3://danielcherney.com/js/ --content-type "application/javascript" --delete
 
       - name: Invalidate CloudFront Cache
         run: |

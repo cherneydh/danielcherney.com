@@ -2,17 +2,24 @@ const folder = window.location.pathname.split('/').pop().split('.')[0];
 const fileData = [];
 
 async function fetchFiles() {
-    const response = await fetch(`https://danielcherney.com.s3.amazonaws.com/${folder}/music.html`);
-    const text = await response.text();
-    const parser = new DOMParser();
-    const doc = parser.parseFromString(text, 'text/html');
-    const articles = doc.querySelectorAll('meta[name="creation-date"]');
-    
-    articles.forEach(article => {
-        const creationDate = article.content;
-        const title = article.nextElementSibling.textContent;
-        fileData.push({ title, creationDate });
-    });
+    try {
+        const response = await fetch(`https://danielcherney.com.s3.amazonaws.com/${folder}/`);
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const text = await response.text();
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(text, 'text/html');
+        const articles = doc.querySelectorAll('meta[name="creation-date"]');
+
+        articles.forEach(article => {
+            const creationDate = article.content;
+            const title = article.nextElementSibling.textContent;
+            fileData.push({ title, creationDate });
+        });
+    } catch (error) {
+        console.error('Failed to fetch files:', error);
+    }
 }
 
 function populateList() {
