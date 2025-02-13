@@ -3,10 +3,11 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     async function fetchArticles() {
         try {
-            const response = await fetch('https://danielcherney.com/articles/articles.json'); // Ensure this URL is correct
+            const response = await fetch('https://danielcherney.com/articles/articles.json'); // Correct URL
             if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-
+            
             const articles = await response.json();
+            console.log('Fetched articles:', articles); // Debugging statement
             return articles.sort((a, b) => new Date(b.creationDate) - new Date(a.creationDate));
         } catch (error) {
             console.error('Failed to fetch articles:', error);
@@ -23,7 +24,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         articles.forEach(article => {
             const li = document.createElement('li');
             const a = document.createElement('a');
-            a.href = article.url;
+            a.href = `https://danielcherney.com${article.url}`; // Ensure URL is complete
             a.textContent = `${article.title} (${new Date(article.creationDate).toDateString()})`;
             li.appendChild(a);
             articlesList.appendChild(li);
