@@ -41,8 +41,13 @@ jobs:
       - name: Get list of updated files
         id: file-list
         run: |
-          # Get the list of changed files between the last commit and the current one
-          updated_files=$(git diff --name-only HEAD^)
+          if [ "$(git rev-list --count HEAD)" -eq 1 ]; then
+            # Only one commit, use the current commit
+            updated_files=$(git ls-files)
+          else
+            # Get the list of changed files between the last commit and the current one
+            updated_files=$(git diff --name-only HEAD^)
+          fi
           
           # Prepare invalidation paths
           invalidation_paths=""
