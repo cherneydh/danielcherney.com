@@ -4,9 +4,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     async function fetchArticles() {
         try {
             const response = await fetch('https://danielcherney.com/articles/articles.json'); // Correct URL
-            if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
             
-            const articles = await response.json();
+            const articles = await response.json(); // Parse JSON response
             console.log('Fetched articles:', articles); // Debugging statement
             return articles.sort((a, b) => new Date(b.creationDate) - new Date(a.creationDate));
         } catch (error) {
