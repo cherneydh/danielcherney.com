@@ -10,7 +10,7 @@ async function fetchArticles() {
         const text = await response.text();
         const parser = new DOMParser();
         const doc = parser.parseFromString(text, 'text/html');
-        const links = Array.from(doc.querySelectorAll('a')).filter(link => link.href.endsWith('.html'));
+        const links = Array.from(doc.querySelectorAll('a')).filter(link => link.href.includes('/articles/') && link.href.endsWith('.html'));
 
         console.log('Found HTML links:', links); // Debugging statement
 
