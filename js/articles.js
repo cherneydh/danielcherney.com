@@ -15,7 +15,7 @@ async function fetchArticles() {
 
         for (let i = 0; i < keys.length; i++) {
             const key = keys[i].textContent;
-            if (key.endsWith('.html') && key.startsWith('articles/')) {
+            if (key.endsWith('.html')) {
                 const url = `https://danielcherney.com.s3.amazonaws.com/${key}`;
                 console.log('Fetching article:', url); // Debugging statement
                 const articleResponse = await fetch(url);
