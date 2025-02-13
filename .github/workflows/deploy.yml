@@ -47,7 +47,10 @@ jobs:
       - name: Invalidate CloudFront Cache
         if: env.UPDATED_FILES != ''
         run: |
-          invalidation_paths=$(echo "$UPDATED_FILES" | tr '\n' ' ' | sed 's| | / |g')
-          aws cloudfront create-invalidation --distribution-id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }} --paths $invalidation_paths
-        
-        
+          # Format the updated files paths for CloudFront
+          invalidation_paths=$(echo "$UPDATED_FILES" | tr '\n' ' ' | sed 's| | /|g' | sed 's|^|/|')
+          
+          # Run CloudFront invalidation
+          aws cloudfront create-invalidation --distribution-id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }}  --paths $invalidation_paths
+      
+      
