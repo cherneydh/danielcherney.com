@@ -1,3 +1,33 @@
+/* Light mode styles */
+:root {
+    --background-color: #f4f4f9;
+    --text-color: #333;
+    --border-color: #ddd;
+    --box-shadow-color: rgba(0, 0, 0, 0.1);
+    --link-color: #008CBA;
+    --hero-background: linear-gradient(to right, #4facfe, #00f2fe);
+    --hero-text-color: white;
+    --nav-background-color: #333;
+    --nav-text-color: #fff;
+    --nav-text-hover-color: #ccc;
+}
+
+/* Dark mode styles */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --background-color: #0d1117;
+        --text-color: #c9d1d9;
+        --border-color: #333;
+        --box-shadow-color: rgba(255, 255, 255, 0.1);
+        --link-color: #81d4fa;
+        --hero-background: linear-gradient(to right, #232526, #414345);
+        --hero-text-color: white;
+        --nav-background-color: #161b22;
+        --nav-text-color: #c9d1d9;
+        --nav-text-hover-color: #ddd;
+    }
+}
+
 * {
     margin: 0;
     padding: 0;
@@ -6,16 +36,37 @@
 }
 
 body {
-    background-color: #f4f4f9;
-    color: #333;
+    background-color: var(--background-color);
+    color: var(--text-color);
     line-height: 1.6;
     transition: background 0.3s ease, color 0.3s ease;
 }
 
 header {
-    background-color: #333;
+    background-color: var(--nav-background-color);
     padding: 1rem 0;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 5px var(--box-shadow-color);
+}
+
+h2 {
+    font-size: 2rem;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+    color: var(--text-color);
+    text-align: center;
+}
+
+h3 {
+    font-size: 1.5rem;
+    margin-top: 1.5rem;
+    margin-bottom: 1rem;
+    color: var(--text-color);
+    text-align: center;
+}
+
+/* Optional: Add some spacing for paragraphs following headers */
+h2 + p, h3 + p {
+    margin-top: 0.5rem;
 }
 
 .main-nav ul {
@@ -31,31 +82,31 @@ header {
 }
 
 .main-nav ul li a {
-    color: #fff;
+    color: var(--nav-text-color);
     text-decoration: none;
     font-weight: bold;
     transition: color 0.3s ease;
 }
 
 .main-nav ul li a:hover {
-    color: #ccc;
+    color: var(--nav-text-hover-color);
 }
 
 .container {
     max-width: 800px;
     margin: 2rem auto;
     padding: 1rem;
-    background: #fff;
+    background: var(--background-color);
     border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 8px var(--box-shadow-color);
 }
 
 .hero {
-    background: linear-gradient(to right, #4facfe, #00f2fe);
-    color: white;
+    background: var(--hero-background);
+    color: var(--hero-text-color);
     padding: 3rem 1.5rem;
     border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 8px var(--box-shadow-color);
     text-align: center;
 }
 
@@ -80,7 +131,7 @@ header {
     height: 150px;
     border: none;
     border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 8px var(--box-shadow-color);
 }
 
 .article-content {
@@ -88,14 +139,14 @@ header {
 }
 
 .article-header {
-    border-bottom: 2px solid #ddd;
+    border-bottom: 2px solid var(--border-color);
     margin-bottom: 1rem;
     padding-bottom: 1rem;
 }
 
 .article-header h1 {
     font-size: 2.5rem;
-    color: #333;
+    color: var(--text-color);
 }
 
 .article-meta {
@@ -107,7 +158,7 @@ header {
     font-size: 1.8rem;
     margin-top: 1.5rem;
     margin-bottom: 0.5rem;
-    color: #333;
+    color: var(--text-color);
 }
 
 .article-body p {
@@ -118,21 +169,7 @@ header {
 .footer {
     text-align: center;
     padding: 1rem;
-    background-color: #333;
-    color: #fff;
-    border-top: 2px solid #ddd;
-}
-
-@media (prefers-color-scheme: dark) {
-    body {
-        color: #c9d1d9;
-        background: #0d1117;
-    }
-    .container {
-        background: #161b22;
-        box-shadow: 0 4px 8px rgba(255, 255, 255, 0.1);
-    }
-    .footer {
-        background-color: #161b22;
-    }
+    background-color: var(--nav-background-color);
+    color: var(--nav-text-color);
+    border-top: 2px solid var(--border-color);
 }

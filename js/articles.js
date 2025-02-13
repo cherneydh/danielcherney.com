@@ -1,7 +1,5 @@
 document.addEventListener('DOMContentLoaded', async () => {
     const articlesList = document.getElementById('articles-list');
-    articlesList.style.display = 'flex';
-    articlesList.style.flexWrap = 'wrap';
 
     async function fetchArticles() {
         try {
@@ -21,39 +19,17 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     function createArticleBox(article) {
         const articleBox = document.createElement('div');
-        articleBox.style.border = '1px solid #ddd';
-        articleBox.style.borderRadius = '8px';
-        articleBox.style.margin = '10px';
-        articleBox.style.padding = '10px';
-        articleBox.style.width = 'calc(33% - 20px)';
-        articleBox.style.boxShadow = '0 4px 8px 0 rgba(0, 0, 0, 0.2)';
-        articleBox.style.textAlign = 'center';
-
-        const articleImage = document.createElement('img');
-        articleImage.src = article.imageUrl || 'https://danielcherney.com/default-article-image.jpg'; // Placeholder image
-        articleImage.alt = article.title;
-        articleImage.style.width = '100%';
-        articleImage.style.borderRadius = '8px 8px 0 0';
-
-        const articleTitle = document.createElement('h3');
-        articleTitle.textContent = article.title;
-
-        const articleDate = document.createElement('p');
-        articleDate.textContent = new Date(article.creationDate).toDateString();
+        articleBox.classList.add('article-box');
 
         const articleLink = document.createElement('a');
         articleLink.href = `https://danielcherney.com${article.url}`;
-        articleLink.textContent = 'Read more';
-        articleLink.style.display = 'block';
-        articleLink.style.marginTop = '10px';
-        articleLink.style.textDecoration = 'none';
-        articleLink.style.color = '#008CBA';
-
-        articleBox.appendChild(articleImage);
-        articleBox.appendChild(articleTitle);
-        articleBox.appendChild(articleDate);
+        articleLink.innerHTML = `
+            <img src="${article.imageUrl || 'https://danielcherney.com/default-article-image.jpg'}" alt="${article.title}">
+            <h3>${article.title}</h3>
+            <p>${new Date(article.creationDate).toDateString()}</p>
+        `;
+        
         articleBox.appendChild(articleLink);
-
         return articleBox;
     }
 
