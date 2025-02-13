@@ -41,13 +41,13 @@ jobs:
       - name: Get list of updated files
         id: file-list
         run: |
-          updated_files=$(rsync -n --out-format='%n' -av ./ s3://danielcherney.com)
+          updated_files=$(aws s3 sync ./ s3://danielcherney.com --dryrun | grep "upload" | awk '{print $5}')
           
           # Prepare invalidation paths
           invalidation_paths=""
-          while IFS= read -r file; do
+          for file in $updated_files; do
             invalidation_paths="$invalidation_paths /${file}"
-          done <<< "$updated_files"
+          done
           
           echo "UPDATED_FILES=$invalidation_paths" >> $GITHUB_ENV
           echo "Debugging UPDATED_FILES: $invalidation_paths"
