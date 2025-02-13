@@ -1,9 +1,9 @@
-const folder = window.location.pathname.split('/').pop().split('.')[0];
-const latestArticleContent = document.getElementById('latest-article-content');
+const subdirectories = ['games', 'musings', 'records'];
+const fileData = [];
 
-async function fetchLatestArticle() {
+async function fetchFiles(subdirectory) {
     try {
-        const response = await fetch(`https://danielcherney.com.s3.amazonaws.com/${folder}/index.html`);
+        const response = await fetch(`https://danielcherney.com.s3.amazonaws.com/${subdirectory}/index.html`);
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
@@ -13,19 +13,36 @@ async function fetchLatestArticle() {
         const articles = Array.from(doc.querySelectorAll('meta[name="creation-date"]')).map(meta => ({
             creationDate: new Date(meta.content),
             title: meta.nextElementSibling ? meta.nextElementSibling.textContent : '',
-            content: meta.parentElement ? meta.parentElement.innerHTML : ''
+            content: meta.parentElement ? meta.parentElement.innerHTML : '',
+            subdirectory
         }));
-        articles.sort((a, b) => b.creationDate - a.creationDate);
-
-        if (articles.length > 0) {
-            latestArticleContent.innerHTML = articles[0].content;
-        } else {
-            latestArticleContent.textContent = 'No articles found.';
-        }
+        fileData.push(...articles);
     } catch (error) {
-        console.error('Failed to fetch the latest article:', error);
-        latestArticleContent.textContent = 'Failed to load the latest article.';
+        console.error(`Failed to fetch files from ${subdirectory}:`, error);
     }
 }
 
-document.addEventListener('DOMContentLoaded', fetchLatestArticle);
+function populateList() {
+    const latestArticleContent = document.getElementById('latest-article-content');
+    fileData.sort((a, b) => b.creationDate - a.creationDate);
+
+    if (fileData.length > 0) {
+        const latestArticle = fileData[0];
+        latestArticleContent.innerHTML = `
+            <h3>${latestArticle.title}</h3>
+            <p>${latestArticle.creationDate.toDateString()}</p>
+            <div>${latestArticle.content}</div>
+            <p>From: ${latestArticle.subdirectory}</p>
+        `;
+    } else {
+        latestArticleContent.textContent = 'No articles found.';
+    }
+}
+
+async function initialize() {
+    const fetchPromises = subdirectories.map(fetchFiles);
+    await Promise.all(fetchPromises);
+    populateList();
+}
+
+document.addEventListener('DOMContentLoaded', initialize);
