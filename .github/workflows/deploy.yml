@@ -41,11 +41,13 @@ jobs:
       - name: Get list of updated files
         id: file-list
         run: |
-          # Get a list of files that need to be uploaded (dry run)
-          updated_files=$(aws s3 sync ./ s3://danielcherney.com --dryrun --query 'Contents[].Key' --output text)
+          updated_files=$(aws s3 sync ./ s3://danielcherney.com --dryrun | grep "upload" | awk '{print $4}')
           
-          # Replace newlines with spaces and prefix each path with a slash
-          invalidation_paths=$(echo "$updated_files" | sed 's|^|/|' | tr '\n' ' ')
+          # Prepare invalidation paths
+          invalidation_paths=""
+          for file in $updated_files; do
+            invalidation_paths="$invalidation_paths /${file#./}"
+          done
           
           echo "UPDATED_FILES=$invalidation_paths" >> $GITHUB_ENV
           echo "Debugging UPDATED_FILES: $invalidation_paths"
