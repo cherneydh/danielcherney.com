@@ -42,8 +42,10 @@ jobs:
         id: file-list
         run: |
           updated_files=$(aws s3 sync ./ s3://danielcherney.com --dryrun | grep "upload" | awk '{print $4}')
-          # Replace newlines with spaces and prefix with /
-          invalidation_paths=$(echo "$updated_files" | sed 's|^|/|;s| | /|g')
+          echo "Updated files: $updated_files"
+          
+          # Replace newlines with spaces and prefix each path with a slash
+          invalidation_paths=$(echo "$updated_files" | sed 's|^|/|' | tr '\n' ' ')
           echo "UPDATED_FILES=$invalidation_paths" >> $GITHUB_ENV
           echo "Debugging UPDATED_FILES: $invalidation_paths"
       
@@ -58,5 +60,4 @@ jobs:
           
           # Run CloudFront invalidation
           aws cloudfront create-invalidation --distribution-id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }} --paths $UPDATED_FILES
-      
       
