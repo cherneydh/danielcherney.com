@@ -24,66 +24,25 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
 
-      - name: Install Brotli and Gzip
+      - name: Sync HTML Files to S3
         run: |
-          sudo apt-get install -y brotli
-          sudo apt-get install -y gzip
+          aws s3 cp ./ s3://danielcherney.com --recursive --exclude "*" --include "*.html" --content-type "text/html" --cache-control "public, max-age=31536000"
 
-      - name: Compress HTML Files with Brotli
+      - name: Sync CSS Files to S3
         run: |
-          find . -name '*.html' -exec brotli -k {} \;
+          aws s3 cp ./css/ s3://danielcherney.com/css/ --recursive --exclude "*" --include "*.css" --content-type "text/css" --cache-control "public, max-age=31536000"
 
-      - name: Compress CSS Files with Brotli
+      - name: Sync JS Files to S3
         run: |
-          find ./css -name '*.css' -exec brotli -k {} \;
-
-      - name: Compress JS Files with Brotli
-        run: |
-          find ./js -name '*.js' -exec brotli -k {} \;
-
-      - name: Compress HTML Files with Gzip
-        run: |
-          find . -name '*.html' -exec gzip -k -9 {} \;
-
-      - name: Compress CSS Files with Gzip
-        run: |
-          find ./css -name '*.css' -exec gzip -k -9 {} \;
-
-      - name: Compress JS Files with Gzip
-        run: |
-          find ./js -name '*.js' -exec gzip -k -9 {} \;
-
-      - name: Clean Up S3 Bucket (Remove Non-compressed Items)
-        run: |
-          aws s3 rm s3://danielcherney.com/ --recursive --exclude "*.br" --exclude "*.gz"
-
-      - name: Sync Brotli Compressed HTML Files to S3
-        run: |
-          aws s3 cp ./ s3://danielcherney.com --recursive --exclude "*" --include "*.html.br" --content-type "text/html" --content-encoding "br" --cache-control "public, max-age=31536000"
-
-      - name: Sync Gzip Compressed HTML Files to S3
-        run: |
-          aws s3 cp ./ s3://danielcherney.com --recursive --exclude "*" --include "*.html.gz" --content-type "text/html" --content-encoding "gzip" --cache-control "public, max-age=31536000"
-
-      - name: Sync Brotli Compressed CSS Files to S3
-        run: |
-          aws s3 cp ./css/ s3://danielcherney.com/css/ --recursive --exclude "*" --include "*.css.br" --content-type "text/css" --content-encoding "br" --cache-control "public, max-age=31536000"
-
-      - name: Sync Gzip Compressed CSS Files to S3
-        run: |
-          aws s3 cp ./css/ s3://danielcherney.com/css/ --recursive --exclude "*" --include "*.css.gz" --content-type "text/css" --content-encoding "gzip" --cache-control "public, max-age=31536000"
-
-      - name: Sync Brotli Compressed JS Files to S3
-        run: |
-          aws s3 cp ./js/ s3://danielcherney.com/js/ --recursive --exclude "*" --include "*.js.br" --content-type "application/javascript" --content-encoding "br" --cache-control "public, max-age=31536000"
-
-      - name: Sync Gzip Compressed JS Files to S3
-        run: |
-          aws s3 cp ./js/ s3://danielcherney.com/js/ --recursive --exclude "*" --include "*.js.gz" --content-type "application/javascript" --content-encoding "gzip" --cache-control "public, max-age=31536000"
+          aws s3 cp ./js/ s3://danielcherney.com/js/ --recursive --exclude "*" --include "*.js" --content-type "application/javascript" --cache-control "public, max-age=31536000"
 
       - name: Sync JSON Files to S3 with no-cache
         run: |
-          aws s3 cp ./ s3://danielcherney.com --recursive --exclude "*" --include "articles.json" --content-type "application/json" --content-encoding "br" --cache-control "no-cache"
+          aws s3 cp ./ s3://danielcherney.com --recursive --exclude "*" --include "articles.json" --content-type "application/json" --cache-control "no-cache"
+
+      - name: Clean Up S3 Bucket (Optional)
+        run: |
+          aws s3 rm s3://danielcherney.com/ --recursive --exclude "*.html" --exclude "*.css" --exclude "*.js" --exclude "articles.json"
 
       - name: Get list of updated files
         id: file-list
@@ -104,7 +63,7 @@ jobs:
           # Prepare invalidation paths
           invalidation_paths=""
           for file in $updated_files; do
-            invalidation_paths="$invalidation_paths /$file /${file%.html}.html /${file%.css}.css /${file%.js}.js /${file%.html}.html.br /${file%.html}.html.gz /${file%.css}.css.br /${file%.css}.css.gz /${file%.js}.js.br /${file%.js}.js.gz"
+            invalidation_paths="$invalidation_paths /$file"
           done
           
           echo "UPDATED_FILES=$invalidation_paths" >> $GITHUB_ENV
@@ -114,4 +73,3 @@ jobs:
         run: |
           # Run CloudFront invalidation
           aws cloudfront create-invalidation --distribution-id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }} --paths $UPDATED_FILES
-      
