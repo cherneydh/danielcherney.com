@@ -12,7 +12,7 @@ async function fetchLatestArticle() {
             document.getElementById('latest-article-content').innerHTML = `
                 <h3>${latestArticle.title}</h3>
                 <p>${new Date(latestArticle.creationDate).toDateString()}</p>
-                <p><a href="${latestArticle.url}">Read more</a></p>
+                <p><a href="${latestArticle.url}" aria-label="Read Daniel’s most recent article: ${latestArticle.title}">Read Daniel’s most recent article: ${latestArticle.title}</a></p>
             `;
         } else {
             document.getElementById('latest-article-content').textContent = 'No articles found.';
