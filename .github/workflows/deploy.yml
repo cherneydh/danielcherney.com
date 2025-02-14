@@ -61,7 +61,7 @@ jobs:
           fi
           
           # Prepare invalidation paths
-          invalidation_paths=""
+          invalidation_paths="/"
           for file in $updated_files; do
             invalidation_paths="$invalidation_paths /$file"
           done
