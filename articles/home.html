@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="../css/styles.css">
     <link rel="stylesheet" href="../css/article-styles.css">
     <link rel="stylesheet" href="../css/hero.css">
+    <script src="https://www.google.com/recaptcha/enterprise.js" async defer></script>
 </head>
 <body>
     <header>
@@ -74,7 +75,21 @@
           </a>
         </p>
       </footer>
-      
+    <div id="comments-section">
+        <h2>Comments</h2>
+        <div id="comments-list"></div>
+        <div id="comment-form">
+            <input type="text" id="name" placeholder="Your Name" />
+            <textarea id="comment" placeholder="Your Comment"></textarea>
+            <input type="hidden" id="replyingTo" />
+            <input type="hidden" id="article" value="article-1" />
+            <div class="g-recaptcha" data-sitekey="6Lcvf9gqAAAAAK_08xNK3fsBUuI3L57-syU9zV_E" data-action="submit"></div>
+            <br/>
+            <button id="submit-comment">Submit</button>
+        </div>
+    </div>
+
+    <script src="../js/comments.js"></script>
     <script src="../js/article.js"></script>
     <script src="../js/hero.js"></script>
 </body>

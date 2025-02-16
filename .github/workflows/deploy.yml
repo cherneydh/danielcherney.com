@@ -42,7 +42,27 @@ jobs:
 
       - name: Clean Up S3 Bucket (Optional)
         run: |
-          aws s3 rm s3://danielcherney.com/ --recursive --exclude "*.html" --exclude "*.css" --exclude "*.js" --exclude "articles.json"
+          aws s3 rm s3://danielcherney.com/ --recursive --exclude "*.html" --exclude "*.css" --exclude "*.js" --exclude "articles.json" --exclude "comments.json"
+
+      - name: Clean Up Old Versions (Optional)
+        run: |
+          # List versions of the objects
+          aws s3api list-object-versions --bucket danielcherney.com --prefix articles.json --query "Versions[?IsLatest==\`false\`].{Key:Key,VersionId:VersionId}" --output json > old_versions.json
+      
+          # Delete old versions
+          for row in $(jq -r '.[] | @base64' old_versions.json); do
+            _jq() {
+              echo ${row} | base64 --decode | jq -r ${1}
+            }
+            aws s3api delete-object --bucket danielcherney.com --key "$(_jq '.Key')" --version-id "$(_jq '.VersionId')"
+          done
+        
+      - name: Deploy Lambda Function
+        run: |
+          cd js
+          zip -r ../lambda-update-comments.zip comments-lambda.js
+          cd ..
+          aws lambda update-function-code --function-name comments --zip-file fileb://lambda-update-comments.zip
 
       - name: Get list of updated files
         id: file-list

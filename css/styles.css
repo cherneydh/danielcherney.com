@@ -173,3 +173,65 @@ h2 + p, h3 + p {
     color: var(--nav-text-color);
     border-top: 2px solid var(--border-color);
 }
+
+/* Comments Section */
+#comments-section {
+    margin-top: 2rem;
+    padding: 1rem;
+    background: var(--background-color);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+}
+
+#comment-form {
+    margin-top: 1.5rem;
+}
+
+#comment-form input, #comment-form textarea {
+    width: 100%;
+    padding: 0.75rem;
+    margin-bottom: 0.75rem;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    font-size: 1rem;
+    color: var(--text-color);
+    background: var(--background-color);
+}
+
+#comment-form button {
+    padding: 0.75rem 1.5rem;
+    background-color: var(--link-color);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+#comment-form button:hover {
+    background-color: var(--nav-text-hover-color);
+}
+
+.comment {
+    padding: 1rem;
+    margin-bottom: 1rem;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    background: var(--background-color);
+    box-shadow: 0 2px 5px var(--box-shadow-color);
+}
+
+.reply-button {
+    margin-top: 0.5rem;
+    padding: 0.5rem 1rem;
+    background-color: var(--link-color);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.reply-button:hover {
+    background-color: var(--nav-text-hover-color);
+}
