@@ -19,21 +19,44 @@ exports.handler = async (event) => {
         console.error('Error retrieving secret:', error);
         return {
             statusCode: 500,
+            headers: {
+                "Access-Control-Allow-Origin": "*",
+                "Access-Control-Allow-Headers": "Content-Type",
+                "Access-Control-Allow-Methods": "POST"
+            },
             body: JSON.stringify({ error: 'Failed to retrieve secrets' })
         };
     }
 
     // Verify reCAPTCHA
-    const recaptchaResponse = await axios.post(`https://www.google.com/recaptcha/api/siteverify`, null, {
-        params: {
-            secret: recaptchaSecret,
-            response: recaptchaToken
-        }
-    });
+    try {
+        const recaptchaResponse = await axios.post(`https://www.google.com/recaptcha/api/siteverify`, null, {
+            params: {
+                secret: recaptchaSecret,
+                response: recaptchaToken
+            }
+        });
 
-    if (!recaptchaResponse.data.success) {
+        if (!recaptchaResponse.data.success) {
+            return {
+                statusCode: 400,
+                headers: {
+                    "Access-Control-Allow-Origin": "*",
+                    "Access-Control-Allow-Headers": "Content-Type",
+                    "Access-Control-Allow-Methods": "POST"
+                },
+                body: JSON.stringify({ error: 'CAPTCHA verification failed' })
+            };
+        }
+    } catch (error) {
+        console.error('Error verifying CAPTCHA:', error);
         return {
-            statusCode: 400,
+            statusCode: 500,
+            headers: {
+                "Access-Control-Allow-Origin": "*",
+                "Access-Control-Allow-Headers": "Content-Type",
+                "Access-Control-Allow-Methods": "POST"
+            },
             body: JSON.stringify({ error: 'CAPTCHA verification failed' })
         };
     }
@@ -81,12 +104,22 @@ exports.handler = async (event) => {
 
         return {
             statusCode: 200,
+            headers: {
+                "Access-Control-Allow-Origin": "*",
+                "Access-Control-Allow-Headers": "Content-Type",
+                "Access-Control-Allow-Methods": "POST"
+            },
             body: JSON.stringify(newComment)
         };
     } catch (error) {
         console.error('Error processing request:', error);
         return {
             statusCode: 500,
+            headers: {
+                "Access-Control-Allow-Origin": "*",
+                "Access-Control-Allow-Headers": "Content-Type",
+                "Access-Control-Allow-Methods": "POST"
+            },
             body: JSON.stringify({ error: 'Could not update comments.' })
         };
     }
