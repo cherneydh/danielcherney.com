@@ -58,7 +58,7 @@
             <input type="text" id="name" placeholder="Name" required>
             <textarea id="comment" placeholder="Comment" required></textarea>
             <input type="hidden" id="replyingTo" value="">
-            <input type="text" id="article" placeholder="home" required>
+            <input type="hidden" id="article" value="home">
             <div class="g-recaptcha" data-sitekey="6Lcvf9gqAAAAAK_08xNK3fsBUuI3L57-syU9zV_E"></div>
             <button type="submit" id="submit-comment">Submit</button>
         </form>
@@ -84,6 +84,7 @@
                             commentsList.appendChild(commentElement);
                         });
     
+                        // Add event listeners to reply buttons
                         document.querySelectorAll(".reply-button").forEach(button => {
                             button.addEventListener("click", function() {
                                 const commentId = this.getAttribute("data-id");
@@ -94,21 +95,24 @@
                     });
     
                 document.getElementById("submit-comment").addEventListener("click", function(event) {
-                    event.preventDefault();
+                    event.preventDefault(); // Prevent the form from refreshing the page
                     const name = document.getElementById("name").value;
                     const comment = document.getElementById("comment").value;
                     const replyingTo = document.getElementById("replyingTo").value || null;
                     const article = document.getElementById("article").value;
-                    
-                    var recaptchaToken = document.querySelector('.g-recaptcha-response').value;
     
+                    // Get the reCAPTCHA token
+                    var recaptchaToken = document.querySelector('.g-recaptcha-response').value;
+                    
                     if (recaptchaToken) {
-                        fetch("https://danielcherney.com/comments", {
+                        const newComment = { name, comment, replyingTo, article, recaptchaToken };
+                        
+                        fetch("https://your-s3-bucket-endpoint/comments", {
                             method: "POST",
                             headers: {
                                 "Content-Type": "application/json"
                             },
-                            body: JSON.stringify({ name, comment, replyingTo, article, recaptchaToken })
+                            body: JSON.stringify(newComment)
                         })
                         .then(response => response.json())
                         .then(newComment => {
@@ -123,12 +127,14 @@
                             `;
                             commentsList.appendChild(commentElement);
     
+                            // Add event listener to the new reply button
                             commentElement.querySelector(".reply-button").addEventListener("click", function() {
                                 const commentId = this.getAttribute("data-id");
                                 document.getElementById("replyingTo").value = commentId;
                                 document.getElementById("comment").focus();
                             });
     
+                            // Optionally, reset the form and clear the reCAPTCHA
                             document.getElementById("your_form").reset();
                             grecaptcha.reset();
                         });
@@ -160,7 +166,6 @@
         </p>
       </footer>
 
-    <script src="../js/comments.js"></script>
     <script src="../js/article.js"></script>
     <script src="../js/hero.js"></script>
 </body>
