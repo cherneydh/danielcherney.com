@@ -1,6 +1,11 @@
 document.addEventListener("DOMContentLoaded", function() {
     fetch("comments.json")
-        .then(response => response.json())
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
         .then(data => {
             const commentsList = document.getElementById("comments-list");
             data.forEach(comment => {
@@ -24,6 +29,9 @@ document.addEventListener("DOMContentLoaded", function() {
                     document.getElementById("comment").focus();
                 });
             });
+        })
+        .catch(error => {
+            console.error('There was a problem with the fetch operation:', error);
         });
 
     document.getElementById("submit-comment").addEventListener("click", function(event) {
@@ -46,7 +54,12 @@ document.addEventListener("DOMContentLoaded", function() {
                 },
                 body: JSON.stringify(newComment)
             })
-            .then(response => response.json())
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
             .then(newComment => {
                 const commentElement = document.createElement("div");
                 commentElement.className = "comment";
@@ -69,6 +82,9 @@ document.addEventListener("DOMContentLoaded", function() {
                 // Optionally, reset the form and clear the reCAPTCHA
                 document.getElementById("your_form").reset();
                 grecaptcha.reset();
+            })
+            .catch(error => {
+                console.error('There was a problem with the fetch operation:', error);
             });
         } else {
             alert('Please complete the reCAPTCHA');
