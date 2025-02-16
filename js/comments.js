@@ -65,30 +65,36 @@ document.addEventListener("DOMContentLoaded", function() {
                     if (!response.ok) {
                         throw new Error('Network response was not ok');
                     }
-                    return response.json();
+                    return response.text(); // Fetch the response as text
                 })
-                .then(newComment => {
-                    const commentElement = document.createElement("div");
-                    commentElement.className = "comment";
-                    commentElement.innerHTML = `
-                        <p><strong>${newComment.name}</strong> (${new Date(newComment.date).toLocaleString()}):</p>
-                        <p>${newComment.comment}</p>
-                        ${newComment.replyingTo ? `<p>Replying to comment ID: ${newComment.replyingTo}</p>` : ""}
-                        <p>Article: ${newComment.article}</p>
-                        <button class="reply-button" data-id="${newComment.id}">Reply</button>
-                    `;
-                    commentsList.appendChild(commentElement);
+                .then(text => {
+                    console.log('Fetched text:', text);  // Log the fetched text to debug
+                    try {
+                        const newComment = JSON.parse(text);  // Try to parse the JSON
+                        const commentElement = document.createElement("div");
+                        commentElement.className = "comment";
+                        commentElement.innerHTML = `
+                            <p><strong>${newComment.name}</strong> (${new Date(newComment.date).toLocaleString()}):</p>
+                            <p>${newComment.comment}</p>
+                            ${newComment.replyingTo ? `<p>Replying to comment ID: ${newComment.replyingTo}</p>` : ""}
+                            <p>Article: ${newComment.article}</p>
+                            <button class="reply-button" data-id="${newComment.id}">Reply</button>
+                        `;
+                        commentsList.appendChild(commentElement);
 
-                    // Add event listener to the new reply button
-                    commentElement.querySelector(".reply-button").addEventListener("click", function() {
-                        const commentId = this.getAttribute("data-id");
-                        document.getElementById("replyingTo").value = commentId;
-                        document.getElementById("comment").focus();
-                    });
+                        // Add event listener to the new reply button
+                        commentElement.querySelector(".reply-button").addEventListener("click", function() {
+                            const commentId = this.getAttribute("data-id");
+                            document.getElementById("replyingTo").value = commentId;
+                            document.getElementById("comment").focus();
+                        });
 
-                    // Optionally, reset the form and clear the reCAPTCHA
-                    document.getElementById("your_form").reset();
-                    grecaptcha.reset();
+                        // Optionally, reset the form and clear the reCAPTCHA
+                        document.getElementById("your_form").reset();
+                        grecaptcha.reset();
+                    } catch (error) {
+                        console.error('There was a problem parsing the JSON:', error);
+                    }
                 })
                 .catch(error => {
                     console.error('There was a problem with the fetch operation:', error);
