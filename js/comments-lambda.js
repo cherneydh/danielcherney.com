@@ -5,8 +5,14 @@ const secretsManager = new AWS.SecretsManager();
 const axios = require('axios');
 
 exports.handler = async (event) => {
-    const { name, comment, replyingTo, article, recaptchaToken } = JSON.parse(event.body);
+    const { name, comment, replyingTo, article, recaptchaToken } = JSON.parse(event.Records[0].body);
     const timestamp = new Date().toISOString();
+
+    const responseHeaders = {
+        "Access-Control-Allow-Origin": "*", // Adjust this to your domain for security
+        "Access-Control-Allow-Headers": "Content-Type",
+        "Access-Control-Allow-Methods": "POST"
+    };
 
     // Retrieve secrets from Secrets Manager
     let recaptchaSecret, distributionID;
@@ -19,11 +25,7 @@ exports.handler = async (event) => {
         console.error('Error retrieving secret:', error);
         return {
             statusCode: 500,
-            headers: {
-                "Access-Control-Allow-Origin": "*",
-                "Access-Control-Allow-Headers": "Content-Type",
-                "Access-Control-Allow-Methods": "POST"
-            },
+            headers: responseHeaders,
             body: JSON.stringify({ error: 'Failed to retrieve secrets' })
         };
     }
@@ -40,11 +42,7 @@ exports.handler = async (event) => {
         if (!recaptchaResponse.data.success) {
             return {
                 statusCode: 400,
-                headers: {
-                    "Access-Control-Allow-Origin": "*",
-                    "Access-Control-Allow-Headers": "Content-Type",
-                    "Access-Control-Allow-Methods": "POST"
-                },
+                headers: responseHeaders,
                 body: JSON.stringify({ error: 'CAPTCHA verification failed' })
             };
         }
@@ -52,11 +50,7 @@ exports.handler = async (event) => {
         console.error('Error verifying CAPTCHA:', error);
         return {
             statusCode: 500,
-            headers: {
-                "Access-Control-Allow-Origin": "*",
-                "Access-Control-Allow-Headers": "Content-Type",
-                "Access-Control-Allow-Methods": "POST"
-            },
+            headers: responseHeaders,
             body: JSON.stringify({ error: 'CAPTCHA verification failed' })
         };
     }
@@ -104,22 +98,14 @@ exports.handler = async (event) => {
 
         return {
             statusCode: 200,
-            headers: {
-                "Access-Control-Allow-Origin": "*",
-                "Access-Control-Allow-Headers": "Content-Type",
-                "Access-Control-Allow-Methods": "POST"
-            },
+            headers: responseHeaders,
             body: JSON.stringify(newComment)
         };
     } catch (error) {
         console.error('Error processing request:', error);
         return {
             statusCode: 500,
-            headers: {
-                "Access-Control-Allow-Origin": "*",
-                "Access-Control-Allow-Headers": "Content-Type",
-                "Access-Control-Allow-Methods": "POST"
-            },
+            headers: responseHeaders,
             body: JSON.stringify({ error: 'Could not update comments.' })
         };
     }

@@ -110,19 +110,90 @@
             
             </section>
         </article>
-        <div id="comments-section">
-            <h2>Comments</h2>
-            <div id="comments-list"></div>
-            <div id="comment-form">
-                <input type="text" id="name" placeholder="Your Name" />
-                <textarea id="comment" placeholder="Your Comment"></textarea>
-                <input type="hidden" id="replyingTo" />
-                <input type="hidden" id="article" value="18xx" />
-                <div class="g-recaptcha" data-sitekey="6Lcvf9gqAAAAAK_08xNK3fsBUuI3L57-syU9zV_E" data-action="submit"></div>
-                <br/>
-                <button id="submit-comment">Submit</button>
-            </div>
-        </div>  
+        <form id="your_form">
+            <input type="text" id="name" placeholder="Name" required>
+            <textarea id="comment" placeholder="Comment" required></textarea>
+            <input type="hidden" id="replyingTo" value="">
+            <input type="text" id="article" placeholder="18xx" required>
+            <div class="g-recaptcha" data-sitekey="6Lcvf9gqAAAAAK_08xNK3fsBUuI3L57-syU9zV_E"></div>
+            <button type="submit" id="submit-comment">Submit</button>
+        </form>
+        
+        <div id="comments-list"></div>
+    
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                fetch("comments.json")
+                    .then(response => response.json())
+                    .then(data => {
+                        const commentsList = document.getElementById("comments-list");
+                        data.forEach(comment => {
+                            const commentElement = document.createElement("div");
+                            commentElement.className = "comment";
+                            commentElement.innerHTML = `
+                                <p><strong>${comment.name}</strong> (${new Date(comment.date).toLocaleString()}):</p>
+                                <p>${comment.comment}</p>
+                                ${comment.replyingTo ? `<p>Replying to comment ID: ${comment.replyingTo}</p>` : ""}
+                                <p>Article: ${comment.article}</p>
+                                <button class="reply-button" data-id="${comment.id}">Reply</button>
+                            `;
+                            commentsList.appendChild(commentElement);
+                        });
+    
+                        document.querySelectorAll(".reply-button").forEach(button => {
+                            button.addEventListener("click", function() {
+                                const commentId = this.getAttribute("data-id");
+                                document.getElementById("replyingTo").value = commentId;
+                                document.getElementById("comment").focus();
+                            });
+                        });
+                    });
+    
+                document.getElementById("submit-comment").addEventListener("click", function(event) {
+                    event.preventDefault();
+                    const name = document.getElementById("name").value;
+                    const comment = document.getElementById("comment").value;
+                    const replyingTo = document.getElementById("replyingTo").value || null;
+                    const article = document.getElementById("article").value;
+                    
+                    var recaptchaToken = document.querySelector('.g-recaptcha-response').value;
+    
+                    if (recaptchaToken) {
+                        fetch("https://danielcherney.com/comments", {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json"
+                            },
+                            body: JSON.stringify({ name, comment, replyingTo, article, recaptchaToken })
+                        })
+                        .then(response => response.json())
+                        .then(newComment => {
+                            const commentElement = document.createElement("div");
+                            commentElement.className = "comment";
+                            commentElement.innerHTML = `
+                                <p><strong>${newComment.name}</strong> (${new Date(newComment.date).toLocaleString()}):</p>
+                                <p>${newComment.comment}</p>
+                                ${newComment.replyingTo ? `<p>Replying to comment ID: ${newComment.replyingTo}</p>` : ""}
+                                <p>Article: ${newComment.article}</p>
+                                <button class="reply-button" data-id="${newComment.id}">Reply</button>
+                            `;
+                            commentsList.appendChild(commentElement);
+    
+                            commentElement.querySelector(".reply-button").addEventListener("click", function() {
+                                const commentId = this.getAttribute("data-id");
+                                document.getElementById("replyingTo").value = commentId;
+                                document.getElementById("comment").focus();
+                            });
+    
+                            document.getElementById("your_form").reset();
+                            grecaptcha.reset();
+                        });
+                    } else {
+                        alert('Please complete the reCAPTCHA');
+                    }
+                });
+            });
+        </script> 
     </main>
     <footer class="footer" role="contentinfo">
         <p xmlns:cc="http://creativecommons.org/ns#" xmlns:dct="http://purl.org/dc/terms/">

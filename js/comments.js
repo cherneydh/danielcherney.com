@@ -37,12 +37,14 @@ document.addEventListener("DOMContentLoaded", function() {
         var recaptchaToken = document.querySelector('.g-recaptcha-response').value;
         
         if (recaptchaToken) {
-            fetch("https://your-api-gateway-endpoint/update-comments", {
+            const newComment = { name, comment, replyingTo, article, recaptchaToken };
+            
+            fetch("https://danielcherney.com/comments", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
                 },
-                body: JSON.stringify({ name, comment, replyingTo, article, recaptchaToken })
+                body: JSON.stringify(newComment)
             })
             .then(response => response.json())
             .then(newComment => {
