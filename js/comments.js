@@ -1,4 +1,3 @@
-// comments.js
 document.addEventListener("DOMContentLoaded", function() {
     fetch("comments.json")
         .then(response => response.json())
@@ -27,14 +26,17 @@ document.addEventListener("DOMContentLoaded", function() {
             });
         });
 
-    document.getElementById("submit-comment").addEventListener("click", function() {
+    document.getElementById("submit-comment").addEventListener("click", function(event) {
+        event.preventDefault(); // Prevent the form from refreshing the page
         const name = document.getElementById("name").value;
         const comment = document.getElementById("comment").value;
         const replyingTo = document.getElementById("replyingTo").value || null;
         const article = document.getElementById("article").value;
 
         // Get the reCAPTCHA token
-        grecaptcha.execute().then(function(recaptchaToken) {
+        var recaptchaToken = document.querySelector('.g-recaptcha-response').value;
+        
+        if (recaptchaToken) {
             fetch("https://your-api-gateway-endpoint/update-comments", {
                 method: "POST",
                 headers: {
@@ -61,7 +63,13 @@ document.addEventListener("DOMContentLoaded", function() {
                     document.getElementById("replyingTo").value = commentId;
                     document.getElementById("comment").focus();
                 });
+
+                // Optionally, reset the form and clear the reCAPTCHA
+                document.getElementById("your_form").reset();
+                grecaptcha.reset();
             });
-        });
+        } else {
+            alert('Please complete the reCAPTCHA');
+        }
     });
 });

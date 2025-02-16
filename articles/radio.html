@@ -47,6 +47,19 @@
                 <p>Not everyone is comfortable with the feelings explored in this work nor are they friends with it. I think this causes listeners to miss the target. "Accessibility" makes Radio Amor even more special to those who treasure every last glitch. Radio Amor is an experience, not an album or a collection of songs. Radio Amor is a voyage into the lethargy and apathy which haunts me and haunts me again. </p>    
             </section>
         </article>
+        <div id="comments-section">
+            <h2>Comments</h2>
+            <div id="comments-list"></div>
+            <div id="comment-form">
+                <input type="text" id="name" placeholder="Your Name" />
+                <textarea id="comment" placeholder="Your Comment"></textarea>
+                <input type="hidden" id="replyingTo" />
+                <input type="hidden" id="article" value="radio" />
+                <div class="g-recaptcha" data-sitekey="6Lcvf9gqAAAAAK_08xNK3fsBUuI3L57-syU9zV_E" data-action="submit"></div>
+                <br/>
+                <button id="submit-comment">Submit</button>
+            </div>
+        </div>  
     </main>
     <footer class="footer" role="contentinfo">
         <p xmlns:cc="http://creativecommons.org/ns#" xmlns:dct="http://purl.org/dc/terms/">
@@ -68,19 +81,6 @@
           </a>
         </p>
       </footer>
-    <div id="comments-section">
-        <h2>Comments</h2>
-        <div id="comments-list"></div>
-        <div id="comment-form">
-            <input type="text" id="name" placeholder="Your Name" />
-            <textarea id="comment" placeholder="Your Comment"></textarea>
-            <input type="hidden" id="replyingTo" />
-            <input type="hidden" id="article" value="article-1" />
-            <div class="g-recaptcha" data-sitekey="6Lcvf9gqAAAAAK_08xNK3fsBUuI3L57-syU9zV_E" data-action="submit"></div>
-            <br/>
-            <button id="submit-comment">Submit</button>
-        </div>
-    </div>  
 
     <script src="../js/comments.js"></script>
     <script src="../js/article.js"></script>
