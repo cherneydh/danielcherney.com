@@ -8,6 +8,7 @@ document.addEventListener("DOMContentLoaded", function() {
         })
         .then(text => {
             try {
+                console.log('Fetched text:', text);  // Log the fetched text to debug
                 const data = JSON.parse(text);  // Try to parse the JSON
                 const commentsList = document.getElementById("comments-list");
                 data.forEach(comment => {
