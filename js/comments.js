@@ -10,6 +10,7 @@ document.addEventListener("DOMContentLoaded", function() {
             console.log('Fetched text:', text);  // Log the fetched text to debug
             try {
                 const data = JSON.parse(text);  // Try to parse the JSON
+                console.log('Parsed JSON:', data);  // Log the parsed JSON to debug
                 const commentsList = document.getElementById("comments-list");
                 data.forEach(comment => {
                     const commentElement = document.createElement("div");
@@ -71,6 +72,7 @@ document.addEventListener("DOMContentLoaded", function() {
                     console.log('Fetched text:', text);  // Log the fetched text to debug
                     try {
                         const newComment = JSON.parse(text);  // Try to parse the JSON
+                        console.log('Parsed JSON:', newComment);  // Log the parsed JSON to debug
                         const commentElement = document.createElement("div");
                         commentElement.className = "comment";
                         commentElement.innerHTML = `
