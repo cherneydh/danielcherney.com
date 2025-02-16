@@ -1,30 +1,30 @@
 /* Light mode styles */
 :root {
     --background-color: #f4f4f9;
-    --text-color: #333;
-    --border-color: #ddd;
-    --box-shadow-color: rgba(0, 0, 0, 0.1);
-    --link-color: #008CBA;
+    --text-color: #222; /* Darker text color for better contrast */
+    --border-color: #aaa; /* Slightly darker border color */
+    --box-shadow-color: rgba(0, 0, 0, 0.15); /* Darker box shadow */
+    --link-color: #006699; /* Darker link color */
     --hero-background: linear-gradient(to right, #4facfe, #00f2fe);
-    --hero-text-color: white;
-    --nav-background-color: #333;
+    --hero-text-color: #fff;
+    --nav-background-color: #222; /* Darker nav background */
     --nav-text-color: #fff;
-    --nav-text-hover-color: #ccc;
+    --nav-text-hover-color: #aaa; /* Darker hover text color */
 }
 
 /* Dark mode styles */
 @media (prefers-color-scheme: dark) {
     :root {
         --background-color: #0d1117;
-        --text-color: #c9d1d9;
-        --border-color: #333;
-        --box-shadow-color: rgba(255, 255, 255, 0.1);
-        --link-color: #81d4fa;
+        --text-color: #e6edf3; /* Lighter text color for better contrast */
+        --border-color: #444; /* Slightly lighter border color */
+        --box-shadow-color: rgba(255, 255, 255, 0.15); /* Lighter box shadow */
+        --link-color: #4a90e2; /* Slightly lighter link color */
         --hero-background: linear-gradient(to right, #232526, #414345);
-        --hero-text-color: white;
-        --nav-background-color: #161b22;
-        --nav-text-color: #c9d1d9;
-        --nav-text-hover-color: #ddd;
+        --hero-text-color: #fff;
+        --nav-background-color: #1c252e; /* Lighter nav background */
+        --nav-text-color: #e6edf3;
+        --nav-text-hover-color: #c9d1d9; /* Lighter hover text color */
     }
 }
 
@@ -151,7 +151,7 @@ h2 + p, h3 + p {
 
 .article-meta {
     font-size: 0.9rem;
-    color: #777;
+    color: #555; /* Darker meta text color */
 }
 
 .article-body h2 {
